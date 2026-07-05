@@ -131,9 +131,13 @@ export default function App() {
           }
         }
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error("Login failed:", err);
-      showToast("การเชื่อมต่อบัญชี Google ล้มเหลว", "error");
+      if (err?.code === "auth/popup-closed-by-user" || err?.message?.includes("popup-closed-by-user")) {
+        showToast("คุณได้ปิดหน้าต่างเข้าสู่ระบบก่อนดำเนินการเสร็จสิ้น", "info");
+      } else {
+        showToast("การเชื่อมต่อบัญชี Google ล้มเหลว", "error");
+      }
     } finally {
       setIsLoggingIn(false);
     }
