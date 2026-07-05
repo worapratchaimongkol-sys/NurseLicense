@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { X, Calendar, User, IdCard, Building2, Mail, Phone, FileText } from "lucide-react";
+import { X, Calendar, User, IdCard, Building2, Phone, FileText, PhoneCall } from "lucide-react";
 import { License, DEPARTMENTS } from "../types";
 
 interface AddEditLicenseModalProps {
@@ -75,7 +75,7 @@ export const AddEditLicenseModal: React.FC<AddEditLicenseModalProps> = ({
     if (!issueDate) return setError("กรุณาเลือกวันออกใบอนุญาต");
     if (!expiryDate) return setError("กรุณาเลือกวันหมดอายุ");
     if (new Date(expiryDate) <= new Date(issueDate)) return setError("วันหมดอายุต้องอยู่หลังวันออกใบอนุญาต");
-    if (!email.trim() || !/^\S+@\S+\.\S+$/.test(email)) return setError("กรุณากรอกอีเมลแจ้งเตือนที่ถูกต้อง");
+    if (!email.trim() || email.length < 2) return setError("กรุณากรอกเบอร์ภายในโรงพยาบาลที่ถูกต้อง");
     if (!phone.trim() || phone.length < 9) return setError("กรุณากรอกเบอร์โทรศัพท์ที่ถูกต้อง");
 
     try {
@@ -213,16 +213,16 @@ export const AddEditLicenseModal: React.FC<AddEditLicenseModalProps> = ({
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Contact Email */}
+            {/* Hospital Extension / Internal Phone */}
             <div className="space-y-1.5">
               <label className="text-sm font-semibold text-slate-700 flex items-center gap-1.5">
-                <Mail className="w-4 h-4 text-slate-400" /> อีเมลสำหรับแจ้งเตือน
+                <PhoneCall className="w-4 h-4 text-slate-400" /> เบอร์ภายในโรงพยาบาล
               </label>
               <input
-                type="email"
+                type="text"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="nurse.email@hospital.go.th"
+                placeholder="เช่น 1402, 2205 หรือ 0-2XXX-XXXX ต่อ 123"
                 className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-slate-800 text-sm"
                 required
               />

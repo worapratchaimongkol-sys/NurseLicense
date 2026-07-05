@@ -15,7 +15,8 @@ import {
   Link,
   ExternalLink,
   Check,
-  ChevronDown
+  ChevronDown,
+  Trash2
 } from "lucide-react";
 import { License, NotificationLog } from "./types";
 import { DashboardStats } from "./components/DashboardStats";
@@ -348,7 +349,7 @@ export default function App() {
         method: "POST",
       });
       if (!res.ok) throw new Error("Failed to send notification");
-      showToast("ส่งอีเมลแจ้งเตือนพยาบาลวิชาชีพเรียบร้อยแล้ว (จำลอง)", "success");
+      showToast("ส่งแจ้งเตือนไปยังเบอร์ภายในโรงพยาบาลเรียบร้อยแล้ว (จำลอง)", "success");
       await fetchData(false);
     } catch (error) {
       showToast("ไม่สามารถส่งแจ้งเตือนได้", "error");
@@ -647,16 +648,17 @@ export default function App() {
 
                     <button
                       onClick={() => {
-                        if (window.confirm("คุณแน่ใจหรือไม่ว่าต้องการยกเลิกเชื่อมโยงกับชีตนี้?")) {
+                        if (window.confirm("คุณแน่ใจหรือไม่ว่าต้องการยกเลิกการเชื่อมต่อกับชีตนี้?")) {
                           setSpreadsheet(null);
                           localStorage.removeItem("connected_spreadsheet_id");
-                          showToast("ยกเลิกเชื่อมโยงชีตแล้ว", "info");
+                          showToast("ลบการเชื่อมต่อกับ Google Sheets เรียบร้อยแล้ว", "success");
                         }
                       }}
-                      className="w-full text-center text-[10px] text-slate-400 hover:text-slate-600 transition-colors cursor-pointer mt-1 block"
+                      className="w-full flex items-center justify-center gap-1.5 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-100 font-bold rounded-lg cursor-pointer transition-colors text-[11px]"
                     >
-                      ยกเลิกเชื่อมโยงชีตนี้
-                  </button>
+                      <Trash2 className="w-3.5 h-3.5" />
+                      <span>ลบการเชื่อมต่อกับ Sheet</span>
+                    </button>
                   </div>
                 ) : (
                   <div className="space-y-2">

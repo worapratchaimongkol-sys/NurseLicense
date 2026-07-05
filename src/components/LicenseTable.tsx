@@ -192,13 +192,13 @@ export const LicenseTable: React.FC<LicenseTableProps> = ({
                       <div>
                         <p className="font-bold text-slate-800">{lic.name}</p>
                         {role === "admin" ? (
-                          <p className="text-[11px] text-slate-400 mt-0.5">{lic.email} | {lic.phone}</p>
+                          <p className="text-[11px] text-slate-400 mt-0.5">เบอร์ภายใน: {lic.email} | โทร: {lic.phone}</p>
                         ) : (
                           <p className="text-[11px] text-slate-400 mt-0.5 flex items-center gap-1.5 select-none" title="สงวนสิทธิ์เฉพาะ Admin">
                             <span className="inline-flex items-center gap-0.5 px-1 py-0.2 bg-slate-100 text-slate-400 rounded text-[9px] font-extrabold">
-                              🔒 EMAIL
+                              🔒 เบอร์ภายใน
                             </span>
-                            <span className="font-mono text-slate-300">•••••@•••••</span>
+                            <span className="font-mono text-slate-300">••••</span>
                             <span className="text-slate-300">|</span>
                             <span className="inline-flex items-center gap-0.5 px-1 py-0.2 bg-slate-100 text-slate-400 rounded text-[9px] font-extrabold">
                               🔒 TEL
@@ -278,7 +278,7 @@ export const LicenseTable: React.FC<LicenseTableProps> = ({
                           {/* Notify trigger */}
                           <button
                             onClick={() => onNotify(lic.id)}
-                            title="ส่งแจ้งเตือนทางอีเมลจำลอง"
+                            title="ส่งแจ้งเตือนไปยังเบอร์ภายในโรงพยาบาล (จำลอง)"
                             disabled={lic.status === "active"}
                             className={`p-2 rounded-lg cursor-pointer transition-colors ${
                               lic.status === "active"

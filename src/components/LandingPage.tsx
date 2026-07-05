@@ -199,7 +199,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
               <span className="flex items-center gap-1.5">
                 <Bell className="w-3.5 h-3.5 text-blue-500" />
-                จำลองอีเมลแจ้งเตือนพยาบาลทันที
+                จำลองส่งแจ้งเตือนเบอร์ภายในพยาบาลทันที
               </span>
               <span className="font-bold text-slate-500 font-mono">3 ระดับสถานะ</span>
             </div>
@@ -226,7 +226,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               </div>
               <h3 className="font-bold text-base text-slate-800">ระบบปกป้องข้อมูลส่วนบุคคล (PDPA)</h3>
               <p className="text-slate-500 text-xs leading-relaxed font-medium">
-                ปิดบังเลขใบประกอบวิชาชีพพยาบาล อีเมล และเบอร์โทรศัพท์ของบุคลากรหากเข้าใช้ในฐานะผู้ใช้ทั่วไป และเปิดสิทธิ์ให้อ่าน-เขียนข้อมูลเฉพาะ Admin ตัวจริงที่ผ่านการล็อกอินด้วย Google เท่านั้น
+                ปิดบังเลขใบประกอบวิชาชีพพยาบาล เบอร์ภายใน และเบอร์โทรศัพท์ของบุคลากรหากเข้าใช้ในฐานะผู้ใช้ทั่วไป และเปิดสิทธิ์ให้อ่าน-เขียนข้อมูลเฉพาะ Admin ตัวจริงที่ผ่านการล็อกอินด้วย Google เท่านั้น
               </p>
             </div>
 

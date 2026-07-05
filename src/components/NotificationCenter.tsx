@@ -1,5 +1,5 @@
 import React from "react";
-import { Mail, Check, AlertTriangle, Clock, Calendar, RefreshCw } from "lucide-react";
+import { PhoneCall, Check, AlertTriangle, Clock, Calendar, RefreshCw } from "lucide-react";
 import { NotificationLog } from "../types";
 
 interface NotificationCenterProps {
@@ -32,7 +32,7 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
         <div>
           <h3 className="text-base font-bold text-slate-800">ประวัติการแจ้งเตือนและการสแกนระบบ</h3>
           <p className="text-xs text-slate-400 mt-0.5">
-            บันทึกการส่งข้อความแจ้งเตือนอัตโนมัติแก่พยาบาลวิชาชีพผ่านระบบคลาวด์
+            บันทึกการส่งข้อความแจ้งเตือนอัตโนมัติแก่พยาบาลวิชาชีพทางเบอร์ภายในโรงพยาบาล
           </p>
         </div>
         <button
@@ -64,7 +64,7 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
                     isExpiredNotif ? "bg-red-50 text-red-600" : "bg-amber-50 text-amber-600"
                   }`}
                 >
-                  <Mail className="w-4 h-4" />
+                  <PhoneCall className="w-4 h-4" />
                 </div>
 
                 {/* Details */}
@@ -79,7 +79,7 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
                   </div>
 
                   <p className="text-xs text-slate-600 font-medium">
-                    ส่งอีเมลสำเร็จไปยัง: <span className="font-semibold text-slate-700">{log.nurseName}</span> ({log.email})
+                    แจ้งเตือนสำเร็จไปยังเบอร์ภายใน: <span className="font-semibold text-slate-700">{log.nurseName}</span> ({log.email})
                   </p>
 
                   <div className="flex flex-wrap gap-x-4 gap-y-1 pt-1 text-[11px] text-slate-500 font-medium">
