@@ -51,17 +51,36 @@ export const AddEditLicenseModal: React.FC<AddEditLicenseModalProps> = ({
     setError("");
   }, [license, isOpen]);
 
+  // Helper to prevent "The string did not match the expected pattern" in Safari/WebKit
+  // when setting invalid date formats to native date inputs.
+  const safeDateValue = (dateStr: string) => {
+    if (!dateStr) return "";
+    if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+      const d = new Date(dateStr);
+      if (!isNaN(d.getTime())) {
+        return dateStr;
+      }
+    }
+    return "";
+  };
+
   // Automatically suggest expiration date (5 years from issue date)
   const handleIssueDateChange = (val: string) => {
     setIssueDate(val);
-    if (val) {
+    if (!val) {
+      setExpiryDate("");
+      return;
+    }
+    // Only calculate when we have a fully formed YYYY-MM-DD string to avoid partial typing generating NaN-NaN-NaN
+    if (/^\d{4}-\d{2}-\d{2}$/.test(val)) {
       const date = new Date(val);
-      date.setFullYear(date.getFullYear() + 5);
-      // Format as YYYY-MM-DD
-      const year = date.getFullYear();
-      const month = String(date.getMonth() + 1).padStart(2, "0");
-      const day = String(date.getDate()).padStart(2, "0");
-      setExpiryDate(`${year}-${month}-${day}`);
+      if (!isNaN(date.getTime())) {
+        date.setFullYear(date.getFullYear() + 5);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+        setExpiryDate(`${year}-${month}-${day}`);
+      }
     }
   };
 
@@ -186,7 +205,7 @@ export const AddEditLicenseModal: React.FC<AddEditLicenseModalProps> = ({
               <div className="relative">
                 <input
                   type="date"
-                  value={issueDate}
+                  value={safeDateValue(issueDate)}
                   onChange={(e) => handleIssueDateChange(e.target.value)}
                   className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-slate-800 text-sm"
                   required
@@ -201,7 +220,7 @@ export const AddEditLicenseModal: React.FC<AddEditLicenseModalProps> = ({
               </label>
               <input
                 type="date"
-                value={expiryDate}
+                value={safeDateValue(expiryDate)}
                 onChange={(e) => setExpiryDate(e.target.value)}
                 className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-slate-800 text-sm"
                 required
