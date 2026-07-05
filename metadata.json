@@ -1,0 +1,6 @@
+{
+  "name": "Nurse License Expiry Tracker",
+  "description": "ระบบแจ้งเตือนวันหมดอายุของใบประกอบวิชาชีพพยาบาล ล่วงหน้า 3 เดือน พร้อมจัดเก็บข้อมูลบนคลาวด์",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
