@@ -23,6 +23,7 @@ import { AddEditLicenseModal } from "./components/AddEditLicenseModal";
 import { LicenseTable } from "./components/LicenseTable";
 import { NotificationCenter } from "./components/NotificationCenter";
 import { AnalyticsCharts } from "./components/AnalyticsCharts";
+import { LandingPage } from "./components/LandingPage";
 import { User } from "firebase/auth";
 import {
   initAuth,
@@ -58,6 +59,8 @@ export default function App() {
   const [showSheetSelector, setShowSheetSelector] = useState(false);
   const [isLoadingSheets, setIsLoadingSheets] = useState(false);
   const [role, setRole] = useState<"admin" | "user">("user");
+  const [hasEntered, setHasEntered] = useState(false);
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
 
   // Automatically set Admin role for worapratchaimongkol@gmail.com, otherwise User role
   useEffect(() => {
@@ -80,6 +83,7 @@ export default function App() {
       async (currentUser, token) => {
         setUser(currentUser);
         setAccessToken(token);
+        setHasEntered(true); // Automatically enter if already logged in!
         
         // Recover connected spreadsheet
         const savedSheetId = localStorage.getItem("connected_spreadsheet_id");
@@ -102,12 +106,19 @@ export default function App() {
     return () => unsubscribe();
   }, []);
 
+  const handleGuestEnter = () => {
+    setHasEntered(true);
+    showToast("เข้าใช้งานในฐานะผู้ใช้งานทั่วไป (Read-only)", "info");
+  };
+
   const handleLogin = async () => {
+    setIsLoggingIn(true);
     try {
       const res = await googleSignIn();
       if (res) {
         setUser(res.user);
         setAccessToken(res.accessToken);
+        setHasEntered(true); // Automatically enter the dashboard!
         showToast(`เชื่อมต่อบัญชีสำเร็จ: ${res.user.displayName || res.user.email}`, "success");
 
         const savedSheetId = localStorage.getItem("connected_spreadsheet_id");
@@ -123,16 +134,18 @@ export default function App() {
     } catch (err) {
       console.error("Login failed:", err);
       showToast("การเชื่อมต่อบัญชี Google ล้มเหลว", "error");
+    } finally {
+      setIsLoggingIn(false);
     }
   };
-
   const handleLogout = async () => {
     try {
       await googleSignOut();
       setUser(null);
       setAccessToken(null);
       setSpreadsheet(null);
-      showToast("ยกเลิกเชื่อมโยงบัญชี Google เรียบร้อยแล้ว", "success");
+      setHasEntered(false); // Back to landing page!
+      showToast("ออกจากระบบและยกเลิกการเชื่อมโยงแล้ว", "success");
     } catch (err) {
       console.error("Logout failed:", err);
       showToast("ออกจากระบบล้มเหลว", "error");
@@ -413,6 +426,44 @@ export default function App() {
     setIsModalOpen(true);
   };
 
+  if (!hasEntered) {
+    return (
+      <div id="landing-root-container">
+        {/* Toast Notification Banner */}
+        <AnimatePresence>
+          {toast && (
+            <motion.div
+              initial={{ opacity: 0, y: -50 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -50 }}
+              id="landing-toast-notification-banner"
+              className={`fixed top-5 left-1/2 -translate-x-1/2 z-50 px-6 py-3.5 rounded-2xl shadow-lg border text-sm font-semibold flex items-center gap-3.5 max-w-md ${
+                toast.type === "success"
+                  ? "bg-emerald-50 text-emerald-800 border-emerald-100"
+                  : toast.type === "error"
+                  ? "bg-red-50 text-red-800 border-red-100"
+                  : "bg-blue-50 text-blue-800 border-blue-100"
+              }`}
+            >
+              {toast.type === "success" ? (
+                <CheckCircle className="w-5 h-5 text-emerald-500 shrink-0" />
+              ) : (
+                <ShieldAlert className="w-5 h-5 text-red-500 shrink-0" />
+              )}
+              <span>{toast.message}</span>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <LandingPage
+          onGuestEnter={handleGuestEnter}
+          onLogin={handleLogin}
+          isLoggingIn={isLoggingIn}
+        />
+      </div>
+    );
+  }
+
   return (
     <div id="app-root-container" className="flex h-screen overflow-hidden bg-slate-50 font-sans text-slate-800">
       {/* Toast Notification Banner */}
@@ -629,7 +680,7 @@ export default function App() {
           </div>
         )}
 
-        <div className="p-4 border-t border-slate-100 shrink-0">
+        <div className="p-4 border-t border-slate-100 shrink-0 space-y-2">
           <div className="p-4 bg-slate-900 rounded-xl text-white">
             <p className="text-xs text-slate-400 uppercase font-semibold mb-1">Cloud Storage</p>
             <div className="flex items-center gap-2">
@@ -637,6 +688,22 @@ export default function App() {
               <span className="text-sm font-medium text-slate-200">คลาวด์เชื่อมต่อสมบูรณ์</span>
             </div>
           </div>
+
+          <button
+            onClick={async () => {
+              if (user) {
+                await handleLogout();
+              } else {
+                setHasEntered(false);
+                showToast("กลับสู่หน้าแรกเรียบร้อยแล้ว", "info");
+              }
+            }}
+            id="btn-sidebar-logout"
+            className="w-full flex items-center justify-center gap-2 px-3 py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-100 rounded-xl text-xs font-bold cursor-pointer transition-colors"
+          >
+            <LogOut className="w-4 h-4" />
+            <span>ออกจากระบบ / กลับหน้าแรก</span>
+          </button>
         </div>
       </aside>
 
